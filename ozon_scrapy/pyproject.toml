@@ -2,7 +2,7 @@
 name = "ozon-scrapy"
 version = "0.1.0"
 description = ""
-authors = ["aleksey.matveev <aleksey.matveev@alarislabs.com>"]
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
