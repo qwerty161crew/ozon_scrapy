@@ -11,16 +11,16 @@ BOT_NAME = "ozon_scrapy"
 
 SPIDER_MODULES = ["ozon_scrapy.spiders"]
 NEWSPIDER_MODULE = "ozon_scrapy.spiders"
-SPLASH_URL = "http://127.0.0.1:8050"
-DOWNLOADER_MIDDLEWARES = {
-    "scrapy_splash.SplashCookiesMiddleware": 723,
-    "scrapy_splash.SplashMiddleware": 725,
-    "scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware": 810,
-}
-SPIDER_MIDDLEWARES = {
-    "scrapy_splash.SplashDeduplicateArgsMiddleware": 100,
-}
-DUPEFILTER_CLASS = "scrapy_splash.SplashAwareDupeFilter"
+# SPLASH_URL = "http://127.0.0.1:8050"
+# DOWNLOADER_MIDDLEWARES = {
+#     "scrapy_splash.SplashCookiesMiddleware": 723,
+#     "scrapy_splash.SplashMiddleware": 725,
+#     "scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware": 810,
+# }
+# SPIDER_MIDDLEWARES = {
+#     "scrapy_splash.SplashDeduplicateArgsMiddleware": 100,
+# }
+# DUPEFILTER_CLASS = "scrapy_splash.SplashAwareDupeFilter"
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = "ozon_scrapy (+http://www.yourdomain.com)"
 
