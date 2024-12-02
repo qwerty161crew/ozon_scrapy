@@ -1,24 +1,25 @@
 import asyncio
-from pickle import FRAME
+import json
 
 import aio_pika
 import aio_pika.abc
 from aio_pika import Message, connect_robust
 from aio_pika.robust_connection import AbstractRobustConnection
+from config import config
+from pipelines import OzonScrapyPipeline
+from scrapy import signals
 from scrapy.crawler import CrawlerProcess
-
-from ozon_scrapy.config import config
-from ozon_scrapy.spiders import CrawlSpider, OzonCrawlSpider
+from scrapy.signalmanager import dispatcher
+from spiders import CrawlSpider, OzonCrawlSpider
 
 
 class Consumer:
-    def __init__(self, host, port, user, password, repository):
+    def __init__(self, host, port, user, password):
         self.host = host
         self.port = port
         self.user = user
         self.password = password
         self.connect: AbstractRobustConnection | None = None
-        self.repository = repository
 
     async def create_connection(self):
         if self.connect is None:
@@ -43,8 +44,8 @@ class Consumer:
         MessageBody
         {
             "task_id": UUID,
-            "state": "Complete",
-            "Message": "Complete"
+            "start_url": "https://www.ozon.ru/",
+            "product_type": ""
         }
         """
         async with self.connect:
@@ -58,26 +59,32 @@ class Consumer:
                 async for message in queue_iter:
                     async with message.process():
                         result = message.body.decode()
+                        print(result, type(result))
+                        parse_param = json.loads(result)
+                        await self.execute(start_url=[parse_param["start_url"]])
 
     async def execute(self, start_url, product_type=None):
-        process = CrawlerProcess(
-            {"USER_AGENT": "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"}
-        )
-        urls = process.crawl(OzonCrawlSpider(start_urls=[start_url]))
-        print(urls)
+        process = CrawlerProcess()
+        pipeline = OzonScrapyPipeline()
+
+        def item_scraped(item, response, spider):
+            pipeline.results.append(item)
+
+        dispatcher.connect(item_scraped, signal=signals.item_scraped)
+
+        process.crawl(OzonCrawlSpider, start_urls=start_url)
+        process.start()
 
 
-async def main(loop):
+async def main():
     async with Consumer(
         user=config.rabbit_mq.user,
         host=config.rabbit_mq.host,
         port=config.rabbit_mq.port,
         password=config.rabbit_mq.password,
     ) as consumer:
-        await consumer.listen(loop)
+        await consumer.listen()
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main(loop))
-    loop.close()
+    asyncio.run(main())

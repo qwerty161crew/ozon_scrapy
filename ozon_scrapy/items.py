@@ -15,3 +15,7 @@ class OzonScrapyItem(scrapy.Item):
     price = scrapy.Field()
     full_price = scrapy.Field()
     rating = scrapy.Field()
+
+
+class OzonUrlsItems(scrapy.Item):
+    urls = scrapy.Field()

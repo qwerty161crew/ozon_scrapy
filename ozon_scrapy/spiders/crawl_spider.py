@@ -1,24 +1,25 @@
 import scrapy
+from items import OzonScrapyItem, OzonUrlsItems
 from scrapy.http import Response
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
-from ozon_scrapy.items import OzonScrapyItem
-
 
 class OzonCrawlSpider(scrapy.Spider):
     name = "extract_links"
-
-    def __init__(self, start_urls: list = "https://www.ozon.ru/", *args, **kwargs):
-        self.start_urls = start_urls
-        super(OzonCrawlSpider, self).__init__(*args, **kwargs)
+    # start_urls = ["https://www.ozon.ru/"]
+    # def __init__(self, start_urls: list = "https://www.ozon.ru/", *args, **kwargs):
+    #     self.start_urls = start_urls
+    #     super(OzonCrawlSpider, self).__init__(*args, **kwargs)
 
     def parse(self, response: Response):
+        item = OzonUrlsItems()
         all_links = response.css("a::attr(href)").getall()
         filtered_links = [
             response.urljoin(link) for link in all_links if link.startswith("/product/")
         ]
-        return filtered_links
+        item["urls"] = filtered_links
+        yield item
 
 
 class OzonItemSpider(scrapy.Spider):
