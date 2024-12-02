@@ -9,7 +9,7 @@ from ozon_scrapy.items import OzonScrapyItem
 class OzonCrawlSpider(scrapy.Spider):
     name = "extract_links"
 
-    def __init__(self, start_urls: list, *args, **kwargs):
+    def __init__(self, start_urls: list = "https://www.ozon.ru/", *args, **kwargs):
         self.start_urls = start_urls
         super(OzonCrawlSpider, self).__init__(*args, **kwargs)
 
