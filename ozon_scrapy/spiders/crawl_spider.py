@@ -30,7 +30,7 @@ class OzonItemSpider(scrapy.Spider):
         super(OzonItemSpider, self).__init__(*args, **kwargs)
 
     def parse(self, response: Response):
-        item = OzonScrapyItem()
+        item = {}
         item["product_name"] = response.css("h1.t5m_27::text").get()
         item["price"] = response.css("span.m8q_27 span::text").get()
         item["rating"] = response.css("div.u3y_30 span::text").get()

@@ -11,6 +11,7 @@ from itemadapter import ItemAdapter
 class OzonScrapyPipeline:
     def __init__(self):
         self.results = []
+        self.urls = []
 
     def process_item(self, item, spider):
         self.results.append(item)

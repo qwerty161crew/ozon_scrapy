@@ -1,3 +1,3 @@
-from spiders.crawl_spider import CrawlSpider, OzonCrawlSpider
+from spiders.crawl_spider import OzonCrawlSpider, OzonItemSpider
 
-__all__ = ["CrawlSpider", "OzonCrawlSpider"]
+__all__ = ["OzonItemSpider", "OzonCrawlSpider"]
